@@ -3,7 +3,7 @@ package main
 import (
 	"bwastartup/handler"
 	"bwastartup/user"
-	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -19,7 +19,6 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	fmt.Println(userService)
 
 	userHandler := handler.NewUserHandler(userService)
 
@@ -27,5 +26,6 @@ func main() {
 	api := router.Group("/api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
+	api.POST("/sessions", userHandler.Login)
 	router.Run()
 }

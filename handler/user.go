@@ -3,8 +3,9 @@ package handler
 import (
 	"bwastartup/helper"
 	"bwastartup/user"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // mapping input dari user ke struct input
@@ -45,6 +46,36 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	formatter := user.FormatUser(newUser, "tokentokentoken")
 
 	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatter)
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) Login(c *gin.Context) {
+	// menangkap input dari user
+	var input user.LoginInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Login Failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	loggedinUser, err := h.userService.Login(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": err.Error()}
+
+		response := helper.APIResponse("Login Failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := user.FormatUser(loggedinUser, "tokentokentoken")
+
+	response := helper.APIResponse("Successfully Log In", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }
