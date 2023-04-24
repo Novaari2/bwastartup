@@ -37,6 +37,9 @@ func TestCampaignFindAll(t *testing.T) {
 
 	for _, campaign := range campaigns {
 		fmt.Println(campaign.Name)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println(campaign.CampaignImages[0].FileName)
+		}
 	}
 }
 
