@@ -19,6 +19,7 @@ func TestKoneksi(t *testing.T) {
 
 }
 
+// test repository
 func TestCampaignFindAll(t *testing.T) {
 	dsn := "root:@tcp(127.0.0.1:3306)/bwa_startup?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -43,6 +44,7 @@ func TestCampaignFindAll(t *testing.T) {
 	}
 }
 
+// test repository
 func TestCampaignFindByuserId(t *testing.T) {
 	dsn := "root:@tcp(127.0.0.1:3306)/bwa_startup?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -65,4 +67,19 @@ func TestCampaignFindByuserId(t *testing.T) {
 			fmt.Println(campaign.CampaignImages[0].FileName)
 		}
 	}
+}
+
+// test service
+func TestFindCampaign(t *testing.T) {
+	dsn := "root:@tcp(127.0.0.1:3306)/bwa_startup?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		panic(err)
+	}
+	campaignRepository := campaign.NewRepository(db)
+	campaignService := campaign.NewService(campaignRepository)
+
+	campaigns, err := campaignService.GetCampaigns(0)
+	fmt.Println(len(campaigns))
 }
