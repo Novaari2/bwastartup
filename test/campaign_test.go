@@ -49,7 +49,7 @@ func TestCampaignFindByuserId(t *testing.T) {
 	}
 
 	campaignRepository := campaign.NewRepository(db)
-	campaigns, err := campaignRepository.FindByUserID(9)
+	campaigns, err := campaignRepository.FindByUserID(8)
 
 	fmt.Println("debug")
 	fmt.Println("debug")
@@ -58,5 +58,8 @@ func TestCampaignFindByuserId(t *testing.T) {
 
 	for _, campaign := range campaigns {
 		fmt.Println(campaign.Name)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println(campaign.CampaignImages[0].FileName)
+		}
 	}
 }
